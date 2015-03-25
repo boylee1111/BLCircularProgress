@@ -7,6 +7,7 @@
 //
 
 #import "ViewController.h"
+#import "BLCircularProgressView.h"
 
 @interface ViewController ()
 
@@ -17,6 +18,14 @@
 - (void)viewDidLoad {
     [super viewDidLoad];
     // Do any additional setup after loading the view, typically from a nib.
+    
+}
+
+- (void)viewDidAppear:(BOOL)animated {
+    [super viewDidAppear:animated];
+    self.circularProgress.clockwise = NO;
+    self.circularProgress.startAngle = 30.f;
+    self.circularProgress.progress = 20.f;
 }
 
 - (void)didReceiveMemoryWarning {

@@ -8,8 +8,11 @@
 
 #import <UIKit/UIKit.h>
 
+@class BLCircularProgressView;
+
 @interface ViewController : UIViewController
 
+@property (weak, nonatomic) IBOutlet BLCircularProgressView *circularProgress;
 
 @end
 
