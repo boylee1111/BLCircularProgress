@@ -13,22 +13,28 @@
 @protocol BLCircularProgressViewDelegate <NSObject>
 
 @optional
-- (void)circularProgressViewDidFinishTouching:(BLCircularProgressView *)circularProgressView;
+- (void)circularProgressView:(BLCircularProgressView *)circularProgressView didBeginTouchingWithProgress:(CGFloat)progress;
+- (void)circularProgressView:(BLCircularProgressView *)circularProgressView touchingWithProgress:(CGFloat)progress;
+- (void)circularProgressView:(BLCircularProgressView *)circularProgressView didFinishTouchingWithProgress:(CGFloat)progress;
+- (void)circularProgressView:(BLCircularProgressView *)circularProgressView didCancelTouchingWithProgress:(CGFloat)progress;
 
 @end
 
 @interface BLCircularProgressView : UIView
 
 @property (nonatomic) CGFloat progress;
-@property (nonatomic) CGFloat maxProgress;
-@property (nonatomic) CGFloat minProgress;
+
+@property (nonatomic) CGFloat maxProgress UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat minProgress UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat maximaProgress UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat minimaProgress UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic) NSInteger roundedHead UI_APPEARANCE_SELECTOR;
 @property (nonatomic) NSInteger showShadow UI_APPEARANCE_SELECTOR;
 @property (nonatomic) NSInteger clockwise UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic) CGFloat startAngle UI_APPEARANCE_SELECTOR;
-@property (nonatomic) CGFloat thickness UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat thicknessRadio UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic, strong) UIColor *progressFillColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *progressTopGradientColor UI_APPEARANCE_SELECTOR;

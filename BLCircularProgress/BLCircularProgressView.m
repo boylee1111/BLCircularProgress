@@ -17,10 +17,13 @@
 #define RADIANS_TO_DEGRESS(radian)  ((radian) * 180.0 / M_PI)
 #define SQR(x)                      ((x) * (x))
 
-#define TWO_POINT_DISTANCE(point1, point2) sqrt(SQR(point2.x - point1.x) + SQR(point2.y - point1.y))
-#define TWO_ANGLE_DISTANCE(fromAngle, toAngle) MIN(abs(fromAngle - toAngle), abs(360.0f - fromAngle + toAngle));
+#define TWO_POINT_DISTANCE(point1, point2) (sqrt(SQR((point2.x) - (point1.x)) + SQR((point2.y) - (point1.y))))
+#define TWO_ANGLE_DISTANCE(fromAngle, toAngle) (MIN(abs((fromAngle) - (toAngle)), abs(360.0f - (fromAngle) + (toAngle))));
+
+#define TOUCH_SCALE_SHIFT_DISTANCE 3
 
 typedef NS_ENUM(NSInteger, SlideStatus) {
+    SlideStatusNone,
     SlideStatusInBorder,
     SlideStatusOutOfBorderFromMinimumValue,
     SlideStatusOutOfBorderFromMaximumValue
@@ -28,6 +31,9 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 
 @interface BLCircularProgressView () {
     SlideStatus currentSlideStatus;
+    CGPoint center;
+    CGFloat radius;
+    CGFloat circleWidth;
 }
 
 @end
@@ -38,15 +44,22 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     if (self == [BLCircularProgressView class]) {
         id appearance = [self appearance];
         
+        [appearance setMaxProgress:100.f];
+        [appearance setMinProgress:0.f];
+        [appearance setMaximaProgress:100.0f];
+        [appearance setMinimaProgress:0.0f];
+        
         [appearance setRoundedHead:NO];
         [appearance setShowShadow:YES];
         [appearance setClockwise:YES];
         [appearance setStartAngle:0.0f];
-        [appearance setThickness:0.25f];
+        [appearance setThicknessRadio:0.25f];
         
         [appearance setProgressFillColor:nil];
         [appearance setProgressTopGradientColor:RGB(253, 237, 221)];
         [appearance setProgressBottomGradientColor:RGB(248, 195, 145)];
+        
+        [appearance setBackgroundColor:[UIColor clearColor]];
     }
 }
 
@@ -65,8 +78,7 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 }
 
 - (void)assignDefaultValue {
-    self.maxProgress = 100.0f;
-    self.minProgress = 0.0f;
+    currentSlideStatus = SlideStatusNone;
 }
 
 #pragma mark - Drawing
@@ -75,13 +87,14 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     // Calculate position of the circle
     CGFloat progressAngle;
     if (_clockwise) {
-        progressAngle = _progress / _maxProgress * 360.f + _startAngle;
+        progressAngle = (_progress - _minProgress) / (_maxProgress - _minProgress) * 360.f + _startAngle;
     } else {
-        progressAngle = 360.f - _progress / _maxProgress * 360.f + _startAngle;
+        progressAngle = 360.f - (_progress - _minProgress) / (_maxProgress - _minProgress) * 360.f + _startAngle;
     }
-    CGPoint center = CGPointMake(rect.size.width / 2.0f, rect.size.height / 2.0f);
-    CGFloat radius = MIN(rect.size.width, rect.size.height) / 2.0f - 1;
-    CGFloat circleWidth = radius * _thickness;
+    NSLog(@"progree Angle = %f, progress = %f, start angle = %f", progressAngle, _progress, _startAngle);
+    center = CGPointMake(rect.size.width / 2.0f, rect.size.height / 2.0f);
+    radius = MIN(rect.size.width, rect.size.height) / 2.0f - 1;
+    circleWidth = radius * _thicknessRadio;
     
     self.backgroundColor = [UIColor clearColor];
     
@@ -172,9 +185,11 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 #pragma mark - Setter
 
 - (void)setProgress:(CGFloat)progress {
-    _progress = MIN(self.maxProgress, MAX(self.minProgress, progress));
+    _progress = MIN(_maximaProgress, MAX(_minimaProgress, progress));
     [self setNeedsDisplay];
 }
+
+#pragma mark Appearance
 
 - (void)setMaxProgress:(CGFloat)maxProgress {
     _maxProgress = maxProgress;
@@ -186,7 +201,15 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [self setNeedsDisplay];
 }
 
-#pragma mark Appearance
+- (void)setMaximaProgress:(CGFloat)maximaProgress {
+    _maximaProgress =  MIN(maximaProgress, _maxProgress);
+    [self setNeedsDisplay];
+}
+
+- (void)setMinimaProgress:(CGFloat)minimaProgress {
+    _minimaProgress = MAX(minimaProgress, _minProgress);
+    [self setNeedsDisplay];
+}
 
 - (void)setRoundedHead:(NSInteger)roundedHead {
     _roundedHead = roundedHead;
@@ -208,8 +231,8 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [self setNeedsDisplay];
 }
 
-- (void)setThickness:(CGFloat)thickness {
-    _thickness = thickness;
+- (void)setThicknessRadio:(CGFloat)thicknessRadio {
+    _thicknessRadio = thicknessRadio;
     [self setNeedsDisplay];
 }
 
@@ -231,28 +254,80 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 #pragma mark - Touches Event
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesBegan:touches withEvent:event];
     
+    CGPoint touchLocation = [[touches anyObject] locationInView:self];
+    if (TWO_POINT_DISTANCE(touchLocation, center) < radius + TOUCH_SCALE_SHIFT_DISTANCE &&
+        TWO_POINT_DISTANCE(touchLocation, center) > radius - circleWidth - TOUCH_SCALE_SHIFT_DISTANCE) {
+        currentSlideStatus = SlideStatusInBorder;
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didBeginTouchingWithProgress:)]) {
+        [self.delegate circularProgressView:self didBeginTouchingWithProgress:self.progress];
+    }
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesMoved:touches withEvent:event];
     
+    CGPoint touchLocation = [[touches anyObject] locationInView:self];
+    CGFloat angle = fmod(AngleFromNorth(center, touchLocation, NO), 360.f);
+    CGFloat angleDistanceFromStart = TwoAngleAbsoluteDistance(_startAngle, angle, _clockwise);
+    CGFloat progressTmp = (_maxProgress - _minProgress) * angleDistanceFromStart / 360.f + _minProgress;
+    
+    switch (currentSlideStatus) {
+        case SlideStatusNone:
+            return ;
+            break;
+        case SlideStatusInBorder:
+            self.progress = progressTmp;
+            break;
+        case SlideStatusOutOfBorderFromMinimumValue:
+            
+            break;
+        case SlideStatusOutOfBorderFromMaximumValue:
+            
+            break;
+    }
+    
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:touchingWithProgress:)]) {
+        [self.delegate circularProgressView:self touchingWithProgress:self.progress];
+    }
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    if ([self.delegate respondsToSelector:@selector(circularProgressViewDidFinishTouching:)]) {
-        [self.delegate circularProgressViewDidFinishTouching:self];
+    [super touchesEnded:touches withEvent:event];
+    
+    currentSlideStatus = SlideStatusNone;
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didFinishTouchingWithProgress:)]) {
+        [self.delegate circularProgressView:self didFinishTouchingWithProgress:self.progress];
     }
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
+    [super touchesCancelled:touches withEvent:event];
     
+    currentSlideStatus = SlideStatusNone;
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didCancelTouchingWithProgress:)]) {
+        [self.delegate circularProgressView:self didCancelTouchingWithProgress:self.progress];
+    }
 }
 
 #pragma mark - Helper Methods
 
+static inline CGFloat TwoAngleAbsoluteDistance(CGFloat fromAngle, CGFloat toAngle, BOOL clockwise) {
+    fromAngle = fmod(fromAngle, 360.f);
+    toAngle = fmod(toAngle, 360.f);
+    CGFloat angleDifference = toAngle - fromAngle;
+    angleDifference = clockwise ? angleDifference : - angleDifference;
+    angleDifference = fmod(angleDifference, 360.f);
+    if (angleDifference < 0) angleDifference += 360.f;
+    return angleDifference;
+}
+
 //Sourcecode from Apple example clockControl
 //Calculate the direction in degrees from a center point to an arbitrary position.
-static inline float AngleFromNorth(CGPoint p1, CGPoint p2, BOOL flipped) {
+static inline CGFloat AngleFromNorth(CGPoint p1, CGPoint p2, BOOL flipped) {
     CGPoint v = CGPointMake(p2.x - p1.x, p2.y - p1.y);
     float vmag = sqrt(SQR(v.x) + SQR(v.y)), result = 0;
     v.x /= vmag;
