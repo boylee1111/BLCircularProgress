@@ -30,16 +30,20 @@
 @property (nonatomic) CGFloat minimaProgress UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic) NSInteger roundedHead UI_APPEARANCE_SELECTOR;
-@property (nonatomic) NSInteger showShadow UI_APPEARANCE_SELECTOR;
 @property (nonatomic) NSInteger clockwise UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic) CGFloat startAngle UI_APPEARANCE_SELECTOR;
-@property (nonatomic) CGFloat thicknessRadio UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat thicknessRadio UI_APPEARANCE_SELECTOR; // Represent the scale percentage of circle width and radius
+
+@property (nonatomic) CGFloat touchResponseOuterShiftValue UI_APPEARANCE_SELECTOR;
+@property (nonatomic) CGFloat touchResponseInnerShiftValue UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic, strong) UIColor *progressFillColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *progressTopGradientColor UI_APPEARANCE_SELECTOR;
 @property (nonatomic, strong) UIColor *progressBottomGradientColor UI_APPEARANCE_SELECTOR;
 
 @property (nonatomic, assign) id <BLCircularProgressViewDelegate> delegate;
+
+- (void)updateProgress:(CGFloat)progress withAnimation:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 
 @end

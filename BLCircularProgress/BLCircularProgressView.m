@@ -20,7 +20,8 @@
 #define TWO_POINT_DISTANCE(point1, point2) (sqrt(SQR((point2.x) - (point1.x)) + SQR((point2.y) - (point1.y))))
 #define TWO_ANGLE_DISTANCE(fromAngle, toAngle) (MIN(abs((fromAngle) - (toAngle)), abs(360.0f - (fromAngle) + (toAngle))));
 
-#define TOUCH_SCALE_SHIFT_DISTANCE 3
+#define SHIFT_PERCENTAGE_WHEN_OUT_OF_BOARD 0.05
+#define SHIFT_VALUE_WHEN_OUT_OF_BOARD(progressDiff) (progressDiff * SHIFT_PERCENTAGE_WHEN_OUT_OF_BOARD)
 
 typedef NS_ENUM(NSInteger, SlideStatus) {
     SlideStatusNone,
@@ -50,10 +51,12 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
         [appearance setMinimaProgress:0.0f];
         
         [appearance setRoundedHead:NO];
-        [appearance setShowShadow:YES];
         [appearance setClockwise:YES];
         [appearance setStartAngle:0.0f];
         [appearance setThicknessRadio:0.25f];
+        
+        [appearance setTouchResponseOuterShiftValue:5];
+        [appearance setTouchResponseInnerShiftValue:5];
         
         [appearance setProgressFillColor:nil];
         [appearance setProgressTopGradientColor:RGB(253, 237, 221)];
@@ -77,8 +80,7 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     return self;
 }
 
-- (void)assignDefaultValue {
-    currentSlideStatus = SlideStatusNone;
+- (void)updateProgress:(CGFloat)progress withAnimation:(BOOL)animated completion:(void (^)(BOOL))completion {
 }
 
 #pragma mark - Drawing
@@ -91,7 +93,6 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     } else {
         progressAngle = 360.f - (_progress - _minProgress) / (_maxProgress - _minProgress) * 360.f + _startAngle;
     }
-    NSLog(@"progree Angle = %f, progress = %f, start angle = %f", progressAngle, _progress, _startAngle);
     center = CGPointMake(rect.size.width / 2.0f, rect.size.height / 2.0f);
     radius = MIN(rect.size.width, rect.size.height) / 2.0f - 1;
     circleWidth = radius * _thicknessRadio;
@@ -216,11 +217,6 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [self setNeedsDisplay];
 }
 
-- (void)setShowShadow:(NSInteger)showShadow {
-    _showShadow = showShadow;
-    [self setNeedsDisplay];
-}
-
 - (void)setClockwise:(NSInteger)clockwise {
     _clockwise = clockwise;
     [self setNeedsDisplay];
@@ -257,8 +253,8 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [super touchesBegan:touches withEvent:event];
     
     CGPoint touchLocation = [[touches anyObject] locationInView:self];
-    if (TWO_POINT_DISTANCE(touchLocation, center) < radius + TOUCH_SCALE_SHIFT_DISTANCE &&
-        TWO_POINT_DISTANCE(touchLocation, center) > radius - circleWidth - TOUCH_SCALE_SHIFT_DISTANCE) {
+    if (TWO_POINT_DISTANCE(touchLocation, center) < radius + self.touchResponseOuterShiftValue &&
+        TWO_POINT_DISTANCE(touchLocation, center) > radius - circleWidth - self.touchResponseInnerShiftValue) {
         currentSlideStatus = SlideStatusInBorder;
     }
     
@@ -271,7 +267,7 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [super touchesMoved:touches withEvent:event];
     
     CGPoint touchLocation = [[touches anyObject] locationInView:self];
-    CGFloat angle = fmod(AngleFromNorth(center, touchLocation, NO), 360.f);
+    CGFloat angle = fmod(AngleFromNorth(center, touchLocation), 360.f);
     CGFloat angleDistanceFromStart = TwoAngleAbsoluteDistance(_startAngle, angle, _clockwise);
     CGFloat progressTmp = (_maxProgress - _minProgress) * angleDistanceFromStart / 360.f + _minProgress;
     
@@ -279,14 +275,33 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
         case SlideStatusNone:
             return ;
             break;
-        case SlideStatusInBorder:
-            self.progress = progressTmp;
+        case SlideStatusInBorder: {
+            CGFloat maximaProgressAngle = (self.maximaProgress - self.minProgress) / (self.maxProgress - self.minProgress) * 360.f + self.startAngle;
+            CGFloat minimaProgressAngle = (self.minimaProgress - self.minProgress) / (self.maxProgress - self.minProgress) * 360.f + self.startAngle;
+            CGFloat toMaximaProgressAngle = TwoAngleAbsoluteDistance(angle, maximaProgressAngle, self.clockwise);
+            CGFloat toMinimaProgressAngle = TwoAngleAbsoluteDistance(angle, minimaProgressAngle, !self.clockwise);
+            if (progressTmp < self.maximaProgress && progressTmp > self.minimaProgress) {
+                self.progress = progressTmp;
+            } else {
+                if (toMaximaProgressAngle <= toMinimaProgressAngle) {
+                    self.progress = self.minimaProgress;
+                    currentSlideStatus = SlideStatusOutOfBorderFromMinimumValue;
+                } else {
+                    self.progress = self.maximaProgress;
+                    currentSlideStatus = SlideStatusOutOfBorderFromMaximumValue;
+                }
+            }
+        }
             break;
         case SlideStatusOutOfBorderFromMinimumValue:
-            
+            if (progressTmp >= self.minimaProgress && progressTmp < self.minimaProgress + SHIFT_VALUE_WHEN_OUT_OF_BOARD(self.maxProgress - self.minProgress)) {
+                currentSlideStatus = SlideStatusInBorder;
+            }
             break;
         case SlideStatusOutOfBorderFromMaximumValue:
-            
+            if (progressTmp <= self.maximaProgress && progressTmp > self.maximaProgress - SHIFT_VALUE_WHEN_OUT_OF_BOARD(self.maxProgress - self.minProgress)) {
+                currentSlideStatus = SlideStatusInBorder;
+            }
             break;
     }
     
@@ -315,6 +330,10 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 
 #pragma mark - Helper Methods
 
+- (void)assignDefaultValue {
+    currentSlideStatus = SlideStatusNone;
+}
+
 static inline CGFloat TwoAngleAbsoluteDistance(CGFloat fromAngle, CGFloat toAngle, BOOL clockwise) {
     fromAngle = fmod(fromAngle, 360.f);
     toAngle = fmod(toAngle, 360.f);
@@ -325,9 +344,7 @@ static inline CGFloat TwoAngleAbsoluteDistance(CGFloat fromAngle, CGFloat toAngl
     return angleDifference;
 }
 
-//Sourcecode from Apple example clockControl
-//Calculate the direction in degrees from a center point to an arbitrary position.
-static inline CGFloat AngleFromNorth(CGPoint p1, CGPoint p2, BOOL flipped) {
+static inline CGFloat AngleFromNorth(CGPoint p1, CGPoint p2) {
     CGPoint v = CGPointMake(p2.x - p1.x, p2.y - p1.y);
     float vmag = sqrt(SQR(v.x) + SQR(v.y)), result = 0;
     v.x /= vmag;
