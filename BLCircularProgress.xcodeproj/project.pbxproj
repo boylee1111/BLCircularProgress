@@ -8,13 +8,21 @@
 
 /* Begin PBXBuildFile section */
 		05B12A9E39DF3A0EF70ECC15C2DFE1BC /* BLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3800F2807AE474EC9C961CB94177D75D /* BLCircularProgressView.m */; };
+		06C1F4CAF4D04AEA33168D3886D760C3 /* QuinticAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 550B29240770C022F457A63F3AB6349B /* QuinticAnimationAlgorithm.m */; };
+		162134FCE5464D1494513204AACFFB0E /* QuadraticAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = DFA72E3C246D1FD19D81DEA67E225E2B /* QuadraticAnimationAlgorithm.m */; };
 		3C457918C1AF30B6642446355F2379AE /* BLCircularProgressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 19177253606B9E13F2251D7E13C029AB /* BLCircularProgressTests.m */; };
 		3FBED4DAF4F44BA634A7F2A763B1F8AB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB399CD25A0B162C105780F3E777FEF5 /* AppDelegate.m */; };
 		50C62CD3D1E957F07944287B696E1BEE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACBE741C6EFB20275196B8B92C12C1DA /* Images.xcassets */; };
+		5E22BF0147648F70BF5FA6F7C55A8407 /* SimpleLinearAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = E9E3D791C5BA8EF6B240C1836C9613D6 /* SimpleLinearAnimationAlgorithm.m */; };
+		64F1FAE6721E4307A70B9A7A9A80326F /* SinusoidalAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = FA7783B4626DA7ACCD410B6CFBFE7B83 /* SinusoidalAnimationAlgorithm.m */; };
 		66F7DF19C3A75B9852589D832C9CEB8D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B57EE99C958498027B7D337F363621 /* LaunchScreen.xib */; };
 		6E375DD689853359ED51025871ABEAAF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 873CDA8F57648B3D604217055245B868 /* ViewController.m */; };
 		A88B7447E72DCC0BEB21C88859967D2D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0199844D8B40DBEFC0F053D2672757BD /* main.m */; };
+		AA459C000FE69B84A53E622BE9905968 /* CubicAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = EAF4FF1FA2D11AF2942F8B9ABA89A431 /* CubicAnimationAlgorithm.m */; };
+		B4454D0E0A5E1F9439C0DC7DA4D4CFD3 /* QuarticAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 85C9B03A45A704E9EADC5A64F268A318 /* QuarticAnimationAlgorithm.m */; };
+		D4C37B311F5447065685061DE37AF690 /* ExponentialAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 5508B8FAC2A1737FC69ED67D1E828171 /* ExponentialAnimationAlgorithm.m */; };
 		E479716142E13D70F991DA8AAA685488 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C87D4E509979ED929C314A19A407F8A2 /* Main.storyboard */; };
+		F7ED5F3227C6F98EA94D9123F8A96639 /* CircularAnimationAlgorithm.m in Sources */ = {isa = PBXBuildFile; fileRef = 21247F63AB2A808DCC278E4914FB588B /* CircularAnimationAlgorithm.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -34,15 +42,32 @@
 		0CB948FC10AC410BF80E4B3FFF7D2594 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		19177253606B9E13F2251D7E13C029AB /* BLCircularProgressTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLCircularProgressTests.m; sourceTree = "<group>"; };
 		1ECBC162A9D15CF1879B217C7E008292 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		21247F63AB2A808DCC278E4914FB588B /* CircularAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CircularAnimationAlgorithm.m; path = AnimationProgressAlgorithms/CircularAnimationAlgorithm.m; sourceTree = "<group>"; };
+		2DD628B7029EFA8418DC098206F992C0 /* AnimationProgressAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = AnimationProgressAlgorithm.h; path = AnimationProgressAlgorithms/AnimationProgressAlgorithm.h; sourceTree = "<group>"; };
 		3800F2807AE474EC9C961CB94177D75D /* BLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCircularProgressView.m; sourceTree = "<group>"; };
+		5508B8FAC2A1737FC69ED67D1E828171 /* ExponentialAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ExponentialAnimationAlgorithm.m; path = AnimationProgressAlgorithms/ExponentialAnimationAlgorithm.m; sourceTree = "<group>"; };
+		550B29240770C022F457A63F3AB6349B /* QuinticAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuinticAnimationAlgorithm.m; path = AnimationProgressAlgorithms/QuinticAnimationAlgorithm.m; sourceTree = "<group>"; };
 		59B877D86887A27D382F1F36DC7227CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6318319D94C308E83592C8BC6EB8ECF7 /* BLCircularProgressTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BLCircularProgressTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E7BA9E9503ADD766B30A8456CC128BF /* ExponentialAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ExponentialAnimationAlgorithm.h; path = AnimationProgressAlgorithms/ExponentialAnimationAlgorithm.h; sourceTree = "<group>"; };
+		815CB8B535055B9714E4CCF9785C874B /* QuarticAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuarticAnimationAlgorithm.h; path = AnimationProgressAlgorithms/QuarticAnimationAlgorithm.h; sourceTree = "<group>"; };
+		85C9B03A45A704E9EADC5A64F268A318 /* QuarticAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuarticAnimationAlgorithm.m; path = AnimationProgressAlgorithms/QuarticAnimationAlgorithm.m; sourceTree = "<group>"; };
 		873CDA8F57648B3D604217055245B868 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
 		A8ED100C93CBF1F6E31CBF79A6CD44B8 /* BLCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCircularProgressView.h; sourceTree = "<group>"; };
+		A8EDC3259CFCB331113694B183C1BFE6 /* SimpleLinearAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SimpleLinearAnimationAlgorithm.h; path = AnimationProgressAlgorithms/SimpleLinearAnimationAlgorithm.h; sourceTree = "<group>"; };
 		AB399CD25A0B162C105780F3E777FEF5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		ABB6FA37EC9EC383D636E3ED3A22FEB2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		ACBE741C6EFB20275196B8B92C12C1DA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		B728129EC059C8D9BD21D461847DC5F0 /* SinusoidalAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SinusoidalAnimationAlgorithm.h; path = AnimationProgressAlgorithms/SinusoidalAnimationAlgorithm.h; sourceTree = "<group>"; };
+		BC895541ACB47C9EEEFA56879D961E5B /* QuadraticAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuadraticAnimationAlgorithm.h; path = AnimationProgressAlgorithms/QuadraticAnimationAlgorithm.h; sourceTree = "<group>"; };
+		BDA037DFB779DC9260956A861DECFC45 /* CircularAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CircularAnimationAlgorithm.h; path = AnimationProgressAlgorithms/CircularAnimationAlgorithm.h; sourceTree = "<group>"; };
+		C66FA8D8CC08CAB2EE68391012DCC815 /* QuinticAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = QuinticAnimationAlgorithm.h; path = AnimationProgressAlgorithms/QuinticAnimationAlgorithm.h; sourceTree = "<group>"; };
+		DFA72E3C246D1FD19D81DEA67E225E2B /* QuadraticAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = QuadraticAnimationAlgorithm.m; path = AnimationProgressAlgorithms/QuadraticAnimationAlgorithm.m; sourceTree = "<group>"; };
 		E7F7C400EB5FCA7B090F3B80FFE3B9F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E9E3D791C5BA8EF6B240C1836C9613D6 /* SimpleLinearAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SimpleLinearAnimationAlgorithm.m; path = AnimationProgressAlgorithms/SimpleLinearAnimationAlgorithm.m; sourceTree = "<group>"; };
+		EAF4FF1FA2D11AF2942F8B9ABA89A431 /* CubicAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CubicAnimationAlgorithm.m; path = AnimationProgressAlgorithms/CubicAnimationAlgorithm.m; sourceTree = "<group>"; };
+		FA52C43BE3C2EF437B0AF1DF21DC6C90 /* CubicAnimationAlgorithm.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CubicAnimationAlgorithm.h; path = AnimationProgressAlgorithms/CubicAnimationAlgorithm.h; sourceTree = "<group>"; };
+		FA7783B4626DA7ACCD410B6CFBFE7B83 /* SinusoidalAnimationAlgorithm.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SinusoidalAnimationAlgorithm.m; path = AnimationProgressAlgorithms/SinusoidalAnimationAlgorithm.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,9 +139,34 @@
 			path = BLCircularProgress;
 			sourceTree = "<group>";
 		};
+		96BF43B2D67A58807111DED432A9D353 /* AnimationProgressAlgorithms */ = {
+			isa = PBXGroup;
+			children = (
+				2DD628B7029EFA8418DC098206F992C0 /* AnimationProgressAlgorithm.h */,
+				BDA037DFB779DC9260956A861DECFC45 /* CircularAnimationAlgorithm.h */,
+				21247F63AB2A808DCC278E4914FB588B /* CircularAnimationAlgorithm.m */,
+				FA52C43BE3C2EF437B0AF1DF21DC6C90 /* CubicAnimationAlgorithm.h */,
+				EAF4FF1FA2D11AF2942F8B9ABA89A431 /* CubicAnimationAlgorithm.m */,
+				6E7BA9E9503ADD766B30A8456CC128BF /* ExponentialAnimationAlgorithm.h */,
+				5508B8FAC2A1737FC69ED67D1E828171 /* ExponentialAnimationAlgorithm.m */,
+				BC895541ACB47C9EEEFA56879D961E5B /* QuadraticAnimationAlgorithm.h */,
+				DFA72E3C246D1FD19D81DEA67E225E2B /* QuadraticAnimationAlgorithm.m */,
+				815CB8B535055B9714E4CCF9785C874B /* QuarticAnimationAlgorithm.h */,
+				85C9B03A45A704E9EADC5A64F268A318 /* QuarticAnimationAlgorithm.m */,
+				C66FA8D8CC08CAB2EE68391012DCC815 /* QuinticAnimationAlgorithm.h */,
+				550B29240770C022F457A63F3AB6349B /* QuinticAnimationAlgorithm.m */,
+				A8EDC3259CFCB331113694B183C1BFE6 /* SimpleLinearAnimationAlgorithm.h */,
+				E9E3D791C5BA8EF6B240C1836C9613D6 /* SimpleLinearAnimationAlgorithm.m */,
+				B728129EC059C8D9BD21D461847DC5F0 /* SinusoidalAnimationAlgorithm.h */,
+				FA7783B4626DA7ACCD410B6CFBFE7B83 /* SinusoidalAnimationAlgorithm.m */,
+			);
+			name = AnimationProgressAlgorithms;
+			sourceTree = "<group>";
+		};
 		99EEC68139C4ED3C92CEA860617770AD /* Classes */ = {
 			isa = PBXGroup;
 			children = (
+				96BF43B2D67A58807111DED432A9D353 /* AnimationProgressAlgorithms */,
 				A8ED100C93CBF1F6E31CBF79A6CD44B8 /* BLCircularProgressView.h */,
 				3800F2807AE474EC9C961CB94177D75D /* BLCircularProgressView.m */,
 			);
@@ -242,6 +292,14 @@
 			files = (
 				3FBED4DAF4F44BA634A7F2A763B1F8AB /* AppDelegate.m in Sources */,
 				05B12A9E39DF3A0EF70ECC15C2DFE1BC /* BLCircularProgressView.m in Sources */,
+				F7ED5F3227C6F98EA94D9123F8A96639 /* CircularAnimationAlgorithm.m in Sources */,
+				AA459C000FE69B84A53E622BE9905968 /* CubicAnimationAlgorithm.m in Sources */,
+				D4C37B311F5447065685061DE37AF690 /* ExponentialAnimationAlgorithm.m in Sources */,
+				162134FCE5464D1494513204AACFFB0E /* QuadraticAnimationAlgorithm.m in Sources */,
+				B4454D0E0A5E1F9439C0DC7DA4D4CFD3 /* QuarticAnimationAlgorithm.m in Sources */,
+				06C1F4CAF4D04AEA33168D3886D760C3 /* QuinticAnimationAlgorithm.m in Sources */,
+				5E22BF0147648F70BF5FA6F7C55A8407 /* SimpleLinearAnimationAlgorithm.m in Sources */,
+				64F1FAE6721E4307A70B9A7A9A80326F /* SinusoidalAnimationAlgorithm.m in Sources */,
 				6E375DD689853359ED51025871ABEAAF /* ViewController.m in Sources */,
 				A88B7447E72DCC0BEB21C88859967D2D /* main.m in Sources */,
 			);

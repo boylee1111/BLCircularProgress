@@ -9,7 +9,7 @@
 #import "ViewController.h"
 #import "BLCircularProgressView.h"
 
-@interface ViewController ()
+@interface ViewController () <BLCircularProgressViewDelegate>
 
 @end
 
@@ -30,8 +30,9 @@
     self.circularProgress.maximaProgress = 90;
     self.circularProgress.minimaProgress = -90.0f;
     self.circularProgress.progress = -30.f;
+    self.circularProgress.delegate = self;
     
-    [NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
+    [NSTimer scheduledTimerWithTimeInterval:5 target:self selector:@selector(updateProgress) userInfo:nil repeats:YES];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -41,14 +42,24 @@
 
 - (void)updateProgress {
     CGFloat randomValue = [self randomFloatBetween:-100 and:100];
-    [self.circularProgress updateProgress:randomValue withAnimation:YES completion:^(BOOL finished) {
-        NSLog(@"finished, randomvalue = %f", randomValue);
+    [self .circularProgress animateProgress:randomValue completion:^(CGFloat progress) {
+        self.progressLabel.text = [NSString stringWithFormat:@"value = %.2f", progress];
     }];
 }
 
 - (float)randomFloatBetween:(float)smallNumber and:(float)bigNumber {
     float diff = bigNumber - smallNumber;
     return (((float) (arc4random() % ((unsigned)RAND_MAX + 1)) / RAND_MAX) * diff) + smallNumber;
+}
+
+#pragma mark - Delegates
+
+- (void)circularProgressView:(BLCircularProgressView *)circularProgressView didMovedTouchesWithProgress:(CGFloat)progress {
+    self.progressLabel.text = [NSString stringWithFormat:@"value = %.2f", progress];
+}
+
+- (void)circularProgressView:(BLCircularProgressView *)circularProgressView didDuringAnimationWithProgress:(CGFloat)progress {
+    self.progressLabel.text = [NSString stringWithFormat:@"value = %.2f", progress];
 }
 
 @end

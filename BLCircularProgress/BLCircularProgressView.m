@@ -10,34 +10,41 @@
 
 #import "BLCircularProgressView.h"
 
+#import "SimpleLinearAnimationAlgorithm.h"
+#import "QuadraticAnimationAlgorithm.h"
+#import "CubicAnimationAlgorithm.h"
+#import "QuarticAnimationAlgorithm.h"
+#import "QuinticAnimationAlgorithm.h"
+#import "SinusoidalAnimationAlgorithm.h"
+#import "ExponentialAnimationAlgorithm.h"
+#import "CircularAnimationAlgorithm.h"
+
 #define DEGREES_TO_RADIANS(degree)  ((degree) / 180.0 * M_PI)
 #define RADIANS_TO_DEGRESS(radian)  ((radian) * 180.0 / M_PI)
 #define SQR(x)                      ((x) * (x))
 
-#define TWO_POINT_DISTANCE(point1, point2) (sqrt(SQR((point2.x) - (point1.x)) + SQR((point2.y) - (point1.y))))
-#define TWO_ANGLE_DISTANCE(fromAngle, toAngle) (MIN(abs((fromAngle) - (toAngle)), abs(360.0f - (fromAngle) + (toAngle))));
-
-#define PROGRESS_UPDATE_ANIMATION_DURATION 0.4
-#define PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER 100
+#define PROGRESS_UPDATE_ANIMATION_FRAMES_PER_SECOND 80.f
 #define SHIFT_PERCENTAGE_WHEN_OUT_OF_BOARD 0.05
 #define SHIFT_VALUE_WHEN_OUT_OF_BOARD(progressDiff) (progressDiff * SHIFT_PERCENTAGE_WHEN_OUT_OF_BOARD)
 
 typedef NS_ENUM(NSInteger, SlideStatus) {
-    SlideStatusNone,
-    SlideStatusInBorder,
-    SlideStatusOutOfBorderFromMinimumValue,
-    SlideStatusOutOfBorderFromMaximumValue
+    SlideStatusNone = 0,
+    SlideStatusInBorder = 1,
+    SlideStatusOutOfBorderFromMinimumValue = 2,
+    SlideStatusOutOfBorderFromMaximumValue = 3
 };
 
 @interface BLCircularProgressView () {
-    SlideStatus currentSlideStatus;
-    CGPoint center;
-    CGFloat radius;
-    CGFloat circleWidth;
-    NSInteger currentSegmentNumber;
+    SlideStatus currentSlideStatus; // Determine current slide status when touching
+    CGPoint center;                 // Center of cirle
+    CGFloat radius;                 // radius of circle
+    CGFloat circleWidth;            // width of circle
     
-    CGFloat startProgressValue;
-    CGFloat progressUpdateDiff;
+    NSInteger currentSegmentNumber; // current segment number, total value is PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER
+    CGFloat startProgressValue;     // record start value while updating progress with animation
+    CGFloat progressUpdateDiff;     // record change value while updating progress with animation
+    
+    id <AnimationProgressAlgorithm> animationProgressAlgorithm;
 }
 
 @end
@@ -53,10 +60,12 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
         [appearance setMaximaProgress:100.0f];
         [appearance setMinimaProgress:0.0f];
         
-        [appearance setRoundedHead:NO];
         [appearance setClockwise:YES];
         [appearance setStartAngle:0.0f];
-        [appearance setThicknessRadio:0.25f];
+        [appearance setThicknessRadio:0.2f];
+        [appearance setProgressAnimationDuration:0.8f];
+        [appearance setAnimationAlgorithm:AnimationAlgorithmCubic];
+        [appearance setAnimationType:AnimationTypeEaseInEaseOut];
         
         [appearance setTouchResponseOuterShiftValue:5];
         [appearance setTouchResponseInnerShiftValue:5];
@@ -69,43 +78,18 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     }
 }
 
-- (instancetype)initWithCoder:(NSCoder *)aDecoder {
-    if ((self = [super initWithCoder:aDecoder])) {
-        [self assignDefaultValue];
-    }
-    return self;
-}
-
-- (instancetype)initWithFrame:(CGRect)frame {
-    if ((self = [super initWithFrame:frame])) {
-        [self assignDefaultValue];
-    }
-    return self;
-}
-
-- (void)updateProgress:(CGFloat)newProgress withAnimation:(BOOL)animated completion:(void (^)(BOOL))completion {
+- (void)animateProgress:(CGFloat)newProgress completion:(void (^)(CGFloat))completion {
     newProgress = MIN(self.maximaProgress, MAX(self.minimaProgress, newProgress));
     startProgressValue = self.progress;
     progressUpdateDiff = newProgress - startProgressValue;
     currentSegmentNumber = 0;
     self.userInteractionEnabled = NO;
-    [NSTimer scheduledTimerWithTimeInterval:PROGRESS_UPDATE_ANIMATION_DURATION / PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER target:self selector:@selector(updateProgress:) userInfo:completion repeats:YES];
-}
-
-- (void)updateProgress:(NSTimer *)timer {
-    currentSegmentNumber++;
-    if (currentSegmentNumber >= PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER) {
-        currentSegmentNumber = 0;
-        self.userInteractionEnabled = YES;
-        void (^completion)(BOOL) = [timer userInfo];
-        if (completion != nil) {
-            completion(YES);
-        }
-        [timer invalidate];
-        return ;
+    currentSlideStatus = SlideStatusNone;
+    [NSTimer scheduledTimerWithTimeInterval:1 / PROGRESS_UPDATE_ANIMATION_FRAMES_PER_SECOND target:self selector:@selector(updateProgress:) userInfo:completion repeats:YES];
+    
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didBeganAnimationWithProgress:)]) {
+        [self.delegate circularProgressView:self didBeganAnimationWithProgress:self.progress];
     }
-    CGFloat currentProgress = [self quadraticEaseInOutWithCurrentTime:PROGRESS_UPDATE_ANIMATION_DURATION / PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER * currentSegmentNumber startValue:startProgressValue changeInValue:progressUpdateDiff duration:PROGRESS_UPDATE_ANIMATION_DURATION];
-    self.progress = currentProgress;
 }
 
 #pragma mark - Drawing
@@ -146,37 +130,11 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
                                                   endAngle:DEGREES_TO_RADIANS(progressAngle)
                                                  clockwise:_clockwise]];
     
-    if (_roundedHead && _progress != 0)
-    {
-        CGPoint point;
-        point.x = (cos(DEGREES_TO_RADIANS(progressAngle)) * (radius - circleWidth/2)) + center.x;
-        point.y = (sin(DEGREES_TO_RADIANS(progressAngle)) * (radius - circleWidth/2)) + center.y;
-        
-        [path addArcWithCenter:point
-                        radius:circleWidth/2
-                    startAngle:DEGREES_TO_RADIANS(progressAngle)
-                      endAngle:DEGREES_TO_RADIANS(270.0 + progressAngle - 90.0)
-                     clockwise:NO];
-    }
-    
     [path addArcWithCenter:center
                     radius:radius - circleWidth
                 startAngle:DEGREES_TO_RADIANS(progressAngle)
                   endAngle:DEGREES_TO_RADIANS(_startAngle)
                  clockwise:!_clockwise];
-    
-    if (_roundedHead)
-    {
-        CGPoint point;
-        point.x = (cos(DEGREES_TO_RADIANS(_startAngle)) * (radius - circleWidth / 2)) + center.x;
-        point.y = (sin(DEGREES_TO_RADIANS(_startAngle)) * (radius - circleWidth / 2)) + center.y;
-        
-        [path addArcWithCenter:point
-                        radius:circleWidth / 2
-                    startAngle:DEGREES_TO_RADIANS(progressAngle)
-                      endAngle:DEGREES_TO_RADIANS(progressAngle)
-                     clockwise:_clockwise];
-    }
     
     [path closePath];
     
@@ -237,11 +195,6 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [self setNeedsDisplay];
 }
 
-- (void)setRoundedHead:(NSInteger)roundedHead {
-    _roundedHead = roundedHead;
-    [self setNeedsDisplay];
-}
-
 - (void)setClockwise:(NSInteger)clockwise {
     _clockwise = clockwise;
     [self setNeedsDisplay];
@@ -249,12 +202,20 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 
 - (void)setStartAngle:(CGFloat)startAngle {
     _startAngle = fmod(startAngle, 360.f);
+    if (_startAngle < 0) {
+        _startAngle += 360.f;
+    }
     [self setNeedsDisplay];
 }
 
 - (void)setThicknessRadio:(CGFloat)thicknessRadio {
     _thicknessRadio = thicknessRadio;
     [self setNeedsDisplay];
+}
+
+- (void)setAnimationAlgorithm:(AnimationAlgorithm)animationAlgorithm {
+    _animationAlgorithm = animationAlgorithm;
+    [self setAnimationProgressAlgorithmWithAnimationAlgorithm:_animationAlgorithm];
 }
 
 - (void)setProgressFillColor:(UIColor *)progressFillColor {
@@ -278,13 +239,13 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [super touchesBegan:touches withEvent:event];
     
     CGPoint touchLocation = [[touches anyObject] locationInView:self];
-    if (TWO_POINT_DISTANCE(touchLocation, center) < radius + self.touchResponseOuterShiftValue &&
-        TWO_POINT_DISTANCE(touchLocation, center) > radius - circleWidth - self.touchResponseInnerShiftValue) {
+    if (TwoPointAbsoluteDistance(touchLocation, center) < radius + self.touchResponseOuterShiftValue &&
+        TwoPointAbsoluteDistance(touchLocation, center) > radius - circleWidth - self.touchResponseInnerShiftValue) {
         currentSlideStatus = SlideStatusInBorder;
     }
-    
-    if ([self.delegate respondsToSelector:@selector(circularProgressView:didBeginTouchingWithProgress:)]) {
-        [self.delegate circularProgressView:self didBeginTouchingWithProgress:self.progress];
+
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didBeganTouchesWithProgress:)]) {
+        [self.delegate circularProgressView:self didBeganTouchesWithProgress:self.progress];
     }
 }
 
@@ -330,8 +291,8 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
             break;
     }
     
-    if ([self.delegate respondsToSelector:@selector(circularProgressView:touchingWithProgress:)]) {
-        [self.delegate circularProgressView:self touchingWithProgress:self.progress];
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didMovedTouchesWithProgress:)]) {
+        [self.delegate circularProgressView:self didMovedTouchesWithProgress:self.progress];
     }
 }
 
@@ -339,8 +300,9 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [super touchesEnded:touches withEvent:event];
     
     currentSlideStatus = SlideStatusNone;
-    if ([self.delegate respondsToSelector:@selector(circularProgressView:didFinishTouchingWithProgress:)]) {
-        [self.delegate circularProgressView:self didFinishTouchingWithProgress:self.progress];
+    
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didEndedTouchesWithProgress:)]) {
+        [self.delegate circularProgressView:self didEndedTouchesWithProgress:self.progress];
     }
 }
 
@@ -348,22 +310,80 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     [super touchesCancelled:touches withEvent:event];
     
     currentSlideStatus = SlideStatusNone;
-    if ([self.delegate respondsToSelector:@selector(circularProgressView:didCancelTouchingWithProgress:)]) {
-        [self.delegate circularProgressView:self didCancelTouchingWithProgress:self.progress];
+    
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didCancelledTouchesWithProgress:)]) {
+        [self.delegate circularProgressView:self didCancelledTouchesWithProgress:self.progress];
     }
 }
 
 #pragma mark - Helper Methods
 
-- (void)assignDefaultValue {
-    currentSlideStatus = SlideStatusNone;
+- (void)setAnimationProgressAlgorithmWithAnimationAlgorithm:(AnimationAlgorithm)animationAlgorithm {
+    switch (animationAlgorithm) {
+        case AnimationAlgorithmSimpleLinear:
+            animationProgressAlgorithm = [[SimpleLinearAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmQuadratic:
+            animationProgressAlgorithm = [[QuadraticAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmCubic:
+            animationProgressAlgorithm = [[CubicAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmQuartic:
+            animationProgressAlgorithm = [[QuarticAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmQuintic:
+            animationProgressAlgorithm = [[QuinticAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmSinusoidal:
+            animationProgressAlgorithm = [[SinusoidalAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmExponential:
+            animationProgressAlgorithm = [[ExponentialAnimationAlgorithm alloc] init];
+            break;
+        case AnimationAlgorithmCircular:
+            animationProgressAlgorithm = [[CircularAnimationAlgorithm alloc] init];
+            break;
+    }
 }
 
-- (CGFloat)quadraticEaseInOutWithCurrentTime:(CGFloat)time startValue:(CGFloat)start changeInValue:(CGFloat)change duration:(CGFloat)duration {
-    time /= duration / 2;
-    if (time < 1) return change / 2 * time * time * time + start;
-    time -= 2;
-    return change / 2 * (time * time * time + 2) + start;
+- (void)updateProgress:(NSTimer *)timer {
+    currentSegmentNumber++;
+    if (currentSegmentNumber >= (PROGRESS_UPDATE_ANIMATION_FRAMES_PER_SECOND * self.progressAnimationDuration)) {
+        currentSegmentNumber = 0;
+        self.userInteractionEnabled = YES;
+        void (^completion)(BOOL) = [timer userInfo];
+        if (completion != nil) {
+            completion(self.progress);
+        }
+        [timer invalidate];
+        
+        if ([self.delegate respondsToSelector:@selector(circularProgressView:didEndedAnimationWithProgress:)]) {
+            [self.delegate circularProgressView:self didEndedAnimationWithProgress:self.progress];
+        }
+        return ;
+    }
+    CGFloat currentProgress = self.progress;
+    switch (self.animationType) {
+        case AnimationTypeEaseIn:
+            currentProgress = [animationProgressAlgorithm easeInCurrentTime:currentSegmentNumber / PROGRESS_UPDATE_ANIMATION_FRAMES_PER_SECOND startValue:startProgressValue changeInValue:progressUpdateDiff duration:self.progressAnimationDuration];
+            break;
+        case AnimationTypeEaseOut:
+            currentProgress = [animationProgressAlgorithm easeOutCurrentTime:currentSegmentNumber / PROGRESS_UPDATE_ANIMATION_FRAMES_PER_SECOND startValue:startProgressValue changeInValue:progressUpdateDiff duration:self.progressAnimationDuration];
+            break;
+        case AnimationTypeEaseInEaseOut:
+            currentProgress = [animationProgressAlgorithm easeInOutWithCurrentTime:currentSegmentNumber / PROGRESS_UPDATE_ANIMATION_FRAMES_PER_SECOND startValue:startProgressValue changeInValue:progressUpdateDiff duration:self.progressAnimationDuration];
+            break;
+    }
+    self.progress = currentProgress;
+    
+    if ([self.delegate respondsToSelector:@selector(circularProgressView:didDuringAnimationWithProgress:)]) {
+        [self.delegate circularProgressView:self didDuringAnimationWithProgress:self.progress];
+    }
+}
+
+static inline CGFloat TwoPointAbsoluteDistance(CGPoint point1, CGPoint point2) {
+    return (sqrt(SQR((point2.x) - (point1.x)) + SQR((point2.y) - (point1.y))));
 }
 
 static inline CGFloat TwoAngleAbsoluteDistance(CGFloat fromAngle, CGFloat toAngle, BOOL clockwise) {

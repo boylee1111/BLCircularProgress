@@ -2,6 +2,7 @@
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="6751" systemVersion="14C1514" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" initialViewController="vXZ-lx-hvc">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="6736"/>
+        <capability name="Constraints to layout margins" minToolsVersion="6.0"/>
     </dependencies>
     <scenes>
         <!--View Controller-->
@@ -20,8 +21,8 @@
                                 <rect key="frame" x="0.0" y="0.0" width="320" height="568"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                                 <constraints>
-                                    <constraint firstAttribute="width" constant="222" id="qZ5-Bf-xdF"/>
-                                    <constraint firstAttribute="height" constant="222" id="w5e-HC-rZk"/>
+                                    <constraint firstAttribute="width" constant="250" id="qZ5-Bf-xdF"/>
+                                    <constraint firstAttribute="height" constant="250" id="w5e-HC-rZk"/>
                                 </constraints>
                                 <variation key="default">
                                     <mask key="constraints">
@@ -36,17 +37,28 @@
                                     </mask>
                                 </variation>
                             </view>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="atH-h4-TJ8">
+                                <rect key="frame" x="0.0" y="-21" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="calibratedWhite"/>
                         <constraints>
+                            <constraint firstAttribute="centerX" secondItem="atH-h4-TJ8" secondAttribute="centerX" id="Irx-wa-SGp"/>
                             <constraint firstAttribute="centerX" secondItem="wUm-vK-BRc" secondAttribute="centerX" id="cBD-Th-aNa"/>
                             <constraint firstAttribute="centerY" secondItem="wUm-vK-BRc" secondAttribute="centerY" id="q26-ak-Rly"/>
+                            <constraint firstItem="atH-h4-TJ8" firstAttribute="top" secondItem="kh9-bI-dsS" secondAttribute="topMargin" constant="100" id="xLy-0n-cuo"/>
                         </constraints>
                         <variation key="default">
                             <mask key="subviews">
                                 <exclude reference="wUm-vK-BRc"/>
+                                <exclude reference="atH-h4-TJ8"/>
                             </mask>
                             <mask key="constraints">
+                                <exclude reference="Irx-wa-SGp"/>
+                                <exclude reference="xLy-0n-cuo"/>
                                 <exclude reference="cBD-Th-aNa"/>
                                 <exclude reference="q26-ak-Rly"/>
                             </mask>
@@ -54,8 +66,11 @@
                         <variation key="heightClass=regular-widthClass=compact">
                             <mask key="subviews">
                                 <include reference="wUm-vK-BRc"/>
+                                <include reference="atH-h4-TJ8"/>
                             </mask>
                             <mask key="constraints">
+                                <include reference="Irx-wa-SGp"/>
+                                <include reference="xLy-0n-cuo"/>
                                 <include reference="cBD-Th-aNa"/>
                                 <include reference="q26-ak-Rly"/>
                             </mask>
@@ -63,6 +78,7 @@
                     </view>
                     <connections>
                         <outlet property="circularProgress" destination="wUm-vK-BRc" id="wzW-rJ-Xr1"/>
+                        <outlet property="progressLabel" destination="atH-h4-TJ8" id="3tb-ea-DJJ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="x5A-6p-PRh" sceneMemberID="firstResponder"/>
