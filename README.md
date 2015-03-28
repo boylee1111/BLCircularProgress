@@ -19,11 +19,12 @@
 ```objective-c
 @property (nonatomic) NSInteger clockwise UI_APPEARANCE_SELECTOR; // Whether cloackwise
 ```
+
 `UI_APPEARANCE_SELECTOR` doesn't support `BOOL` before iOS 8
 
 ```objective-c
 @property (nonatomic) CGFloat startAngle UI_APPEARANCE_SELECTOR; // Start angle value, will be flipped as angle larger than or equal to 0, smaller than 360
-```objective-c
+```
 
 ```objective-c
 @property (nonatomic) CGFloat thicknessRadio UI_APPEARANCE_SELECTOR; // Represent the scale percentage of circle width and radius, e.g. radius * thicknessRadio = circle width
@@ -71,7 +72,7 @@ The three options are the same for `AnimationAlgorithmSimpleLine` approaches.
 ```objective-c
 @property (nonatomic) CGFloat touchResponseOuterShiftValue UI_APPEARANCE_SELECTOR; // Extend touching response scale from circle outer border
 @property (nonatomic) CGFloat touchResponseInnerShiftValue UI_APPEARANCE_SELECTOR; // Extend touching response scale from circle inner border
-```objective-c
+```
 
 ```objective-c
 @property (nonatomic, strong) UIColor *progressFillColor UI_APPEARANCE_SELECTOR;
@@ -121,6 +122,7 @@ The 3 delegates are fired while `animateProgress:completion:` is invoked. They a
 
 ##Animation Preview
 
+**Note: From left to right are EaseInEaseOut, EaseIn, and EaseOut except Simple Linear**
 
 ###Simple Linear
 
@@ -172,3 +174,7 @@ The 3 delegates are fired while `animateProgress:completion:` is invoked. They a
 
 - [PICircularProgressView](https://github.com/DerPipo/PICircularProgressView)
 - [Robert Penner](https://www.linkedin.com/in/robertpenner)
+
+##License
+
+BLCircularProgress is available under the MIT license. See the LICENSE file for more info.
