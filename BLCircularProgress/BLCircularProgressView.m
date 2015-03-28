@@ -10,9 +10,6 @@
 
 #import "BLCircularProgressView.h"
 
-#define RGBA(r, g, b, a)            [UIColor colorWithRed:(r)/255.0 green:(g)/255.0 blue:(b)/255.0 alpha:(a)]
-#define RGB(r, g, b)                RGBA(r, g, b, 1.0)
-
 #define DEGREES_TO_RADIANS(degree)  ((degree) / 180.0 * M_PI)
 #define RADIANS_TO_DEGRESS(radian)  ((radian) * 180.0 / M_PI)
 #define SQR(x)                      ((x) * (x))
@@ -20,6 +17,8 @@
 #define TWO_POINT_DISTANCE(point1, point2) (sqrt(SQR((point2.x) - (point1.x)) + SQR((point2.y) - (point1.y))))
 #define TWO_ANGLE_DISTANCE(fromAngle, toAngle) (MIN(abs((fromAngle) - (toAngle)), abs(360.0f - (fromAngle) + (toAngle))));
 
+#define PROGRESS_UPDATE_ANIMATION_DURATION 0.4
+#define PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER 100
 #define SHIFT_PERCENTAGE_WHEN_OUT_OF_BOARD 0.05
 #define SHIFT_VALUE_WHEN_OUT_OF_BOARD(progressDiff) (progressDiff * SHIFT_PERCENTAGE_WHEN_OUT_OF_BOARD)
 
@@ -35,6 +34,10 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     CGPoint center;
     CGFloat radius;
     CGFloat circleWidth;
+    NSInteger currentSegmentNumber;
+    
+    CGFloat startProgressValue;
+    CGFloat progressUpdateDiff;
 }
 
 @end
@@ -59,8 +62,8 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
         [appearance setTouchResponseInnerShiftValue:5];
         
         [appearance setProgressFillColor:nil];
-        [appearance setProgressTopGradientColor:RGB(253, 237, 221)];
-        [appearance setProgressBottomGradientColor:RGB(248, 195, 145)];
+        [appearance setProgressTopGradientColor:[UIColor colorWithRed:.992156863 green:.929411765 blue:.866666667 alpha:1.f]];
+        [appearance setProgressBottomGradientColor:[UIColor colorWithRed:.97254902 green:.764705882 blue:.568627451 alpha:1.f]];
         
         [appearance setBackgroundColor:[UIColor clearColor]];
     }
@@ -80,7 +83,29 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     return self;
 }
 
-- (void)updateProgress:(CGFloat)progress withAnimation:(BOOL)animated completion:(void (^)(BOOL))completion {
+- (void)updateProgress:(CGFloat)newProgress withAnimation:(BOOL)animated completion:(void (^)(BOOL))completion {
+    newProgress = MIN(self.maximaProgress, MAX(self.minimaProgress, newProgress));
+    startProgressValue = self.progress;
+    progressUpdateDiff = newProgress - startProgressValue;
+    currentSegmentNumber = 0;
+    self.userInteractionEnabled = NO;
+    [NSTimer scheduledTimerWithTimeInterval:PROGRESS_UPDATE_ANIMATION_DURATION / PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER target:self selector:@selector(updateProgress:) userInfo:completion repeats:YES];
+}
+
+- (void)updateProgress:(NSTimer *)timer {
+    currentSegmentNumber++;
+    if (currentSegmentNumber >= PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER) {
+        currentSegmentNumber = 0;
+        self.userInteractionEnabled = YES;
+        void (^completion)(BOOL) = [timer userInfo];
+        if (completion != nil) {
+            completion(YES);
+        }
+        [timer invalidate];
+        return ;
+    }
+    CGFloat currentProgress = [self quadraticEaseInOutWithCurrentTime:PROGRESS_UPDATE_ANIMATION_DURATION / PROGRESS_UPDATE_ANIMATION_SEGMENT_NUMBER * currentSegmentNumber startValue:startProgressValue changeInValue:progressUpdateDiff duration:PROGRESS_UPDATE_ANIMATION_DURATION];
+    self.progress = currentProgress;
 }
 
 #pragma mark - Drawing
@@ -332,6 +357,13 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 
 - (void)assignDefaultValue {
     currentSlideStatus = SlideStatusNone;
+}
+
+- (CGFloat)quadraticEaseInOutWithCurrentTime:(CGFloat)time startValue:(CGFloat)start changeInValue:(CGFloat)change duration:(CGFloat)duration {
+    time /= duration / 2;
+    if (time < 1) return change / 2 * time * time * time + start;
+    time -= 2;
+    return change / 2 * (time * time * time + 2) + start;
 }
 
 static inline CGFloat TwoAngleAbsoluteDistance(CGFloat fromAngle, CGFloat toAngle, BOOL clockwise) {

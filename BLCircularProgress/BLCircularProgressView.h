@@ -44,6 +44,7 @@
 
 @property (nonatomic, assign) id <BLCircularProgressViewDelegate> delegate;
 
-- (void)updateProgress:(CGFloat)progress withAnimation:(BOOL)animated completion:(void (^)(BOOL finished))completion;
+// !!!: implement via NSTimer, accuracy problem
+- (void)updateProgress:(CGFloat)newProgress withAnimation:(BOOL)animated completion:(void (^)(BOOL finished))completion;
 
 @end

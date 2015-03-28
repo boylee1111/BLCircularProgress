@@ -7,13 +7,13 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		05B12A9E39DF3A0EF70ECC15C2DFE1BC /* BLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = 3800F2807AE474EC9C961CB94177D75D /* BLCircularProgressView.m */; };
 		3C457918C1AF30B6642446355F2379AE /* BLCircularProgressTests.m in Sources */ = {isa = PBXBuildFile; fileRef = 19177253606B9E13F2251D7E13C029AB /* BLCircularProgressTests.m */; };
 		3FBED4DAF4F44BA634A7F2A763B1F8AB /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = AB399CD25A0B162C105780F3E777FEF5 /* AppDelegate.m */; };
 		50C62CD3D1E957F07944287B696E1BEE /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = ACBE741C6EFB20275196B8B92C12C1DA /* Images.xcassets */; };
 		66F7DF19C3A75B9852589D832C9CEB8D /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = C0B57EE99C958498027B7D337F363621 /* LaunchScreen.xib */; };
 		6E375DD689853359ED51025871ABEAAF /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 873CDA8F57648B3D604217055245B868 /* ViewController.m */; };
 		A88B7447E72DCC0BEB21C88859967D2D /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 0199844D8B40DBEFC0F053D2672757BD /* main.m */; };
-		C8C6BEBE7FE5BE1D1C3FF442AB1AE976 /* BLCircularProgressView.m in Sources */ = {isa = PBXBuildFile; fileRef = A01331CEA1E6AF4DF8E5550F095484A7 /* BLCircularProgressView.m */; };
 		E479716142E13D70F991DA8AAA685488 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = C87D4E509979ED929C314A19A407F8A2 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
@@ -34,15 +34,15 @@
 		0CB948FC10AC410BF80E4B3FFF7D2594 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
 		19177253606B9E13F2251D7E13C029AB /* BLCircularProgressTests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = BLCircularProgressTests.m; sourceTree = "<group>"; };
 		1ECBC162A9D15CF1879B217C7E008292 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/LaunchScreen.xib; sourceTree = "<group>"; };
+		3800F2807AE474EC9C961CB94177D75D /* BLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCircularProgressView.m; sourceTree = "<group>"; };
 		59B877D86887A27D382F1F36DC7227CC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		6318319D94C308E83592C8BC6EB8ECF7 /* BLCircularProgressTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = BLCircularProgressTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		873CDA8F57648B3D604217055245B868 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
-		A01331CEA1E6AF4DF8E5550F095484A7 /* BLCircularProgressView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BLCircularProgressView.m; sourceTree = "<group>"; };
+		A8ED100C93CBF1F6E31CBF79A6CD44B8 /* BLCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCircularProgressView.h; sourceTree = "<group>"; };
 		AB399CD25A0B162C105780F3E777FEF5 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		ABB6FA37EC9EC383D636E3ED3A22FEB2 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		ACBE741C6EFB20275196B8B92C12C1DA /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		E7F7C400EB5FCA7B090F3B80FFE3B9F0 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		F88CC761B5CF2187EAD9C12C26FAE20B /* BLCircularProgressView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BLCircularProgressView.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,11 +101,10 @@
 		946BE2EA97D00109F92FD6BD85B84392 /* BLCircularProgress */ = {
 			isa = PBXGroup;
 			children = (
+				99EEC68139C4ED3C92CEA860617770AD /* Classes */,
 				7C300FFD1BEC8F05DE0F1BE972AC35D1 /* Supporting Files */,
 				ABB6FA37EC9EC383D636E3ED3A22FEB2 /* AppDelegate.h */,
 				AB399CD25A0B162C105780F3E777FEF5 /* AppDelegate.m */,
-				F88CC761B5CF2187EAD9C12C26FAE20B /* BLCircularProgressView.h */,
-				A01331CEA1E6AF4DF8E5550F095484A7 /* BLCircularProgressView.m */,
 				ACBE741C6EFB20275196B8B92C12C1DA /* Images.xcassets */,
 				C0B57EE99C958498027B7D337F363621 /* LaunchScreen.xib */,
 				C87D4E509979ED929C314A19A407F8A2 /* Main.storyboard */,
@@ -113,6 +112,15 @@
 				873CDA8F57648B3D604217055245B868 /* ViewController.m */,
 			);
 			path = BLCircularProgress;
+			sourceTree = "<group>";
+		};
+		99EEC68139C4ED3C92CEA860617770AD /* Classes */ = {
+			isa = PBXGroup;
+			children = (
+				A8ED100C93CBF1F6E31CBF79A6CD44B8 /* BLCircularProgressView.h */,
+				3800F2807AE474EC9C961CB94177D75D /* BLCircularProgressView.m */,
+			);
+			name = Classes;
 			sourceTree = "<group>";
 		};
 		AEA4FE058593F6C922DCDCBC06B578EF /* Products */ = {
@@ -233,7 +241,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				3FBED4DAF4F44BA634A7F2A763B1F8AB /* AppDelegate.m in Sources */,
-				C8C6BEBE7FE5BE1D1C3FF442AB1AE976 /* BLCircularProgressView.m in Sources */,
+				05B12A9E39DF3A0EF70ECC15C2DFE1BC /* BLCircularProgressView.m in Sources */,
 				6E375DD689853359ED51025871ABEAAF /* ViewController.m in Sources */,
 				A88B7447E72DCC0BEB21C88859967D2D /* main.m in Sources */,
 			);
