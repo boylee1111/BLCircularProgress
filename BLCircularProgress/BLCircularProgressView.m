@@ -78,6 +78,23 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     }
 }
 
+- (void)updateStartAngleWithDefaultValue:(CircularProgressStartAngle)circularProgressStartAngle {
+    switch (circularProgressStartAngle) {
+        case CircularProgressStartAngleNorth:
+            self.startAngle = 270.f;
+            break;
+        case CircularProgressStartAngleEast:
+            self.startAngle = 0.f;
+            break;
+        case CircularProgressStartAngleSouth:
+            self.startAngle = 90.f;
+            break;
+        case CircularProgressStartAngleWest:
+            self.startAngle = 180.f;
+            break;
+    }
+}
+
 - (void)animateProgress:(CGFloat)newProgress completion:(void (^)(CGFloat))completion {
     newProgress = MIN(self.maximaProgress, MAX(self.minimaProgress, newProgress));
     startProgressValue = self.progress;

@@ -10,6 +10,13 @@
 
 #import "AnimationProgressAlgorithm.h"
 
+typedef NS_ENUM(NSInteger, CircularProgressStartAngle) {
+    CircularProgressStartAngleNorth,
+    CircularProgressStartAngleEast,
+    CircularProgressStartAngleSouth,
+    CircularProgressStartAngleWest
+};
+
 @class BLCircularProgressView;
 
 @protocol BLCircularProgressViewDelegate <NSObject>
@@ -53,6 +60,7 @@
 
 @property (nonatomic, assign) id <BLCircularProgressViewDelegate> delegate;
 
+- (void)updateStartAngleWithDefaultValue:(CircularProgressStartAngle)circularProgressStartAngle;
 // !!!: implement via NSTimer, accuracy problem
 - (void)animateProgress:(CGFloat)newProgress completion:(void (^)(CGFloat))completion;
 
