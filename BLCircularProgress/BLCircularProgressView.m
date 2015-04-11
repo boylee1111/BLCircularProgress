@@ -253,8 +253,6 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
 #pragma mark - Touches Event
 
 - (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesBegan:touches withEvent:event];
-    
     CGPoint touchLocation = [[touches anyObject] locationInView:self];
     if (TwoPointAbsoluteDistance(touchLocation, center) < radius + self.touchResponseOuterShiftValue &&
         TwoPointAbsoluteDistance(touchLocation, center) > radius - circleWidth - self.touchResponseInnerShiftValue) {
@@ -264,11 +262,11 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     if ([self.delegate respondsToSelector:@selector(circularProgressView:didBeganTouchesWithProgress:)]) {
         [self.delegate circularProgressView:self didBeganTouchesWithProgress:self.progress];
     }
+    
+    [super touchesBegan:touches withEvent:event];
 }
 
 - (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesMoved:touches withEvent:event];
-    
     CGPoint touchLocation = [[touches anyObject] locationInView:self];
     CGFloat angle = fmod(AngleFromNorth(center, touchLocation), 360.f);
     CGFloat angleDistanceFromStart = TwoAngleAbsoluteDistance(_startAngle, angle, _clockwise);
@@ -311,26 +309,28 @@ typedef NS_ENUM(NSInteger, SlideStatus) {
     if ([self.delegate respondsToSelector:@selector(circularProgressView:didMovedTouchesWithProgress:)]) {
         [self.delegate circularProgressView:self didMovedTouchesWithProgress:self.progress];
     }
+    
+    [super touchesMoved:touches withEvent:event];
 }
 
 - (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesEnded:touches withEvent:event];
-    
     currentSlideStatus = SlideStatusNone;
     
     if ([self.delegate respondsToSelector:@selector(circularProgressView:didEndedTouchesWithProgress:)]) {
         [self.delegate circularProgressView:self didEndedTouchesWithProgress:self.progress];
     }
+    
+    [super touchesEnded:touches withEvent:event];
 }
 
 - (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event {
-    [super touchesCancelled:touches withEvent:event];
-    
     currentSlideStatus = SlideStatusNone;
     
     if ([self.delegate respondsToSelector:@selector(circularProgressView:didCancelledTouchesWithProgress:)]) {
         [self.delegate circularProgressView:self didCancelledTouchesWithProgress:self.progress];
     }
+    
+    [super touchesCancelled:touches withEvent:event];
 }
 
 #pragma mark - Helper Methods
