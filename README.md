@@ -6,6 +6,7 @@
 
 **BLCircularProgress** allows user to update progress natively via touching. And there are (3 * 7 + 1) animation approaches can be chosen to update current progress.
 
+Swift Version: [BLCircularProgress-Swift](https://github.com/boylee1111/BLCircularProgress-Swift)
 
 ##Properties
 
