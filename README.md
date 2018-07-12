@@ -1,6 +1,6 @@
 # BLCircularProgress
 
-##Overview
+## Overview
 
 **BLCircularProgress** is a customizable circular progress with built-in interactive functionality. It based on [PICircularProgressView](https://github.com/DerPipo/PICircularProgressView) but provides more flexible properties with controllable interface.
 
@@ -8,7 +8,7 @@
 
 Swift Version: [BLCircularProgress-Swift](https://github.com/boylee1111/BLCircularProgress-Swift)
 
-##Properties
+## Properties
 
 ```objective-c
 @property (nonatomic) CGFloat maxProgress UI_APPEARANCE_SELECTOR; // Max value of progress
@@ -82,7 +82,7 @@ The three options are the same for `AnimationAlgorithmSimpleLine` approaches.
 ```
 
 
-##Method
+## Method
 
 ```objective-c
 - (void)animateProgress:(CGFloat)newProgress completion:(void (^)(CGFloat))completion;
@@ -90,9 +90,9 @@ The three options are the same for `AnimationAlgorithmSimpleLine` approaches.
 
 Build-in update progress with animation, `completion` is the callback.
 
-##Delegate
+## Delegate
 
-###Touching Delegates
+### Touching Delegates
 
 ```objective-c
 - (void)circularProgressView:(BLCircularProgressView *)circularProgressView didBeganTouchesWithProgress:(CGFloat)progress;
@@ -121,61 +121,61 @@ These 4 delegates provide the interface while user update progress via touching.
 The 3 delegates are fired while `animateProgress:completion:` is invoked. They are corresponding the *before animation*, *animating*, *after animation* respectively.
 
 
-##Animation Preview
+## Animation Preview
 
 **Note: From left to right are EaseInEaseOut, EaseIn, and EaseOut except Simple Linear**
 
-###Simple Linear
+### Simple Linear
 
 ![Simple Linear](./screenshot/SimpleLinear.gif)
 
-###Quadratic
+### Quadratic
 
 ![Quadratic Ease In Ease Out](./screenshot/Quadratic/QuadraticEaseInEaseOut.gif)
 ![Quadratic Ease In](./screenshot/Quadratic/QuadraticEaseIn.gif)
 ![Quadratic Ease Out](./screenshot/Quadratic/QuadraticEaseOut.gif)
 
-###Cubic
+### Cubic
 
 ![Cubic Ease In Ease Out](./screenshot/Cubic/CubicEaseInEaseOut.gif)
 ![Cubic Ease In](./screenshot/Cubic/CubicEaseIn.gif)
 ![Cubic Ease Out](./screenshot/Cubic/CubicEaseOut.gif)
 
-###Quartic
+### Quartic
 
 ![Quartic Ease In Ease Out](./screenshot/Quartic/QuarticEaseInEaseOut.gif)
 ![Quartic Ease In](./screenshot/Quartic/QuarticEaseIn.gif)
 ![Quartic Ease Out](./screenshot/Quartic/QuarticEaseOut.gif)
 
-###Quintic
+### Quintic
 
 ![Quintic Ease In Ease Out](./screenshot/Quintic/QuinticEaseInEaseOut.gif)
 ![Quintic Ease In](./screenshot/Quintic/QuinticEaseIn.gif)
 ![Quintic Ease Out](./screenshot/Quintic/QuinticEaseOut.gif)
 
-###Sinusoidal
+### Sinusoidal
 
 ![Sinusoidal Ease In Ease Out](./screenshot/Sinusoidal/SinusoidalEaseInEaseOut.gif)
 ![Sinusoidal Ease In](./screenshot/Sinusoidal/SinusoidalEaseIn.gif)
 ![Sinusoidal Ease Out](./screenshot/Sinusoidal/SinusoidalEaseOut.gif)
 
-###Exponential
+### Exponential
 
 ![Exponential Ease In Ease Out](./screenshot/Exponential/ExponentialEaseInEaseOut.gif)
 ![Exponential Ease In](./screenshot/Exponential/ExponentialEaseIn.gif)
 ![Exponential Ease Out](./screenshot/Exponential/ExponentialEaseOut.gif)
 
-###Circular
+### Circular
 
 ![Circular Ease In Ease Out](./screenshot/Circular/CircularEaseInEaseOut.gif)
 ![Circular Ease In](./screenshot/Circular/CircularEaseIn.gif)
 ![Circular Ease Out](./screenshot/Circular/CircularEaseOut.gif)
 
-##Credits
+## Credits
 
 - [PICircularProgressView](https://github.com/DerPipo/PICircularProgressView)
 - [Robert Penner](https://www.linkedin.com/in/robertpenner)
 
-##License
+## License
 
 BLCircularProgress is available under the MIT license. See the LICENSE file for more info.
